@@ -60,9 +60,20 @@ class QuizGameTests(unittest.TestCase):
     def test_play_selected_number_of_quizzes(self):
         first, second = self.game.quizzes[:2]
         answers = ["0", "6", "2", str(first.answer), str(second.answer % 4 + 1)]
-        with patch("builtins.input", side_effect=answers), redirect_stdout(io.StringIO()):
+        output = io.StringIO()
+        with patch("builtins.input", side_effect=answers), redirect_stdout(output):
             self.game.play()
         self.assertEqual(self.game.best_score, {"correct": 1, "total": 2})
+        review = output.getvalue().split("[오답 노트]")[1]
+        self.assertIn(second.question, review)
+        self.assertNotIn(first.question, review)
+
+    def test_no_review_when_all_correct(self):
+        answers = ["5"] + [str(quiz.answer) for quiz in self.game.quizzes]
+        output = io.StringIO()
+        with patch("builtins.input", side_effect=answers), redirect_stdout(output):
+            self.game.play()
+        self.assertNotIn("[오답 노트]", output.getvalue())
 
     def test_corrupt_json_and_invalid_schema_use_defaults(self):
         for contents in ("{broken", json.dumps({"quizzes": [], "best_score": {"correct": 2, "total": 0}})):
