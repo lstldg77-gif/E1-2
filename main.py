@@ -153,6 +153,21 @@ class QuizGame:
         for index, quiz in enumerate(self.quizzes, 1):
             print(f"[{index}] {quiz.question}")
 
+    def delete_quiz(self):
+        if not self.quizzes:
+            print("삭제할 퀴즈가 없습니다.")
+            return
+        self.list_quizzes()
+        number = read_number(f"삭제할 퀴즈 번호 (0: 취소, 1-{len(self.quizzes)}): ", 0, len(self.quizzes))
+        if number == 0:
+            print("삭제를 취소했습니다.")
+            return
+        removed = self.quizzes.pop(number - 1)
+        if self.save_state():
+            print(f"'{removed.question}' 퀴즈를 삭제하고 저장했습니다.")
+        else:
+            print("퀴즈를 삭제했지만 파일에는 저장되지 않았습니다.")
+
     def show_score(self):
         if self.best_score is None:
             print("아직 퀴즈를 푼 기록이 없습니다.")
@@ -165,8 +180,8 @@ class QuizGame:
         try:
             while True:
                 print("\n========== 파이썬 입문 퀴즈 ==========")
-                print("1. 퀴즈 풀기\n2. 퀴즈 추가\n3. 퀴즈 목록\n4. 점수 확인\n5. 종료")
-                choice = read_number("선택: ", 1, 5)
+                print("1. 퀴즈 풀기\n2. 퀴즈 추가\n3. 퀴즈 목록\n4. 퀴즈 삭제\n5. 점수 확인\n6. 종료")
+                choice = read_number("선택: ", 1, 6)
                 if choice == 1:
                     self.play()
                 elif choice == 2:
@@ -174,6 +189,8 @@ class QuizGame:
                 elif choice == 3:
                     self.list_quizzes()
                 elif choice == 4:
+                    self.delete_quiz()
+                elif choice == 5:
                     self.show_score()
                 else:
                     print("게임을 종료합니다.")

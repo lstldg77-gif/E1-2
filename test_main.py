@@ -65,14 +65,33 @@ class QuizGameTests(unittest.TestCase):
             self.assertEqual(len(game.quizzes), 5)
             self.assertIsNone(game.best_score)
 
+    def test_delete_quiz_saves_and_cancel_keeps(self):
+        first_question = self.game.quizzes[0].question
+        with patch("builtins.input", side_effect=["0"]), redirect_stdout(io.StringIO()):
+            self.game.delete_quiz()
+        self.assertEqual(len(self.game.quizzes), 5)
+        with patch("builtins.input", side_effect=["9", "1"]), redirect_stdout(io.StringIO()):
+            self.game.delete_quiz()
+            restarted = QuizGame(self.state_file)
+        self.assertEqual(len(restarted.quizzes), 4)
+        self.assertNotIn(first_question, [quiz.question for quiz in restarted.quizzes])
+
+    def test_menu_runs_delete_and_exits(self):
+        with patch("builtins.input", side_effect=["4", "1", "6"]), redirect_stdout(io.StringIO()):
+            self.game.run()
+        saved = json.loads(self.state_file.read_text(encoding="utf-8"))
+        self.assertEqual(len(saved["quizzes"]), 4)
+
     def test_empty_quiz_list(self):
         self.game.quizzes = []
         output = io.StringIO()
         with redirect_stdout(output):
             self.game.play()
             self.game.list_quizzes()
+            self.game.delete_quiz()
             self.game.show_score()
         self.assertIn("등록된 퀴즈가 없습니다", output.getvalue())
+        self.assertIn("삭제할 퀴즈가 없습니다", output.getvalue())
         self.assertIn("아직 퀴즈를 푼 기록이 없습니다", output.getvalue())
 
     def test_interrupt_and_eof_save_and_exit(self):
