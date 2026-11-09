@@ -1,0 +1,52 @@
+# Git 작업 기록
+# 저장소: https://github.com/lstldg77-gif/E1-2
+# 이 파일을 추가한 커밋(Docs: Git 작업 기록 보관) 직전까지의 기록입니다.
+
+## 1. 커밋 그래프 (git log --oneline --graph --all)
+* 13f4d49 Docs: README를 과제 결과물 순서로 재구성하고 재실행 기록 추가
+*   2d60773 Merge: README 프로젝트 개요
+|\  
+| * 8dc6a2b Docs: README에 프로젝트 개요 절 추가
+|/  
+* 8639878 Docs: 실행 결과를 results 폴더에 보관하고 README에 정리
+* b1b5023 Docs: clone 환경에서 README에 개발 환경 추가
+* b7d71c9 Docs: README에 저장소 주소와 Git 작업 이력 정리
+* 5eac6fa Test: 퀴즈 데이터 검증과 메뉴 종료 테스트 보강
+* bc44e11 Refactor: 메뉴 처리를 목록 기반으로 정리
+* a6b8de8 Feat: 틀린 문제 오답 노트 출력
+* 9b12e91 Feat: 풀 문제 수 선택 기능 추가
+*   a008bbe Merge: 퀴즈 삭제 기능
+|\  
+| * f9fd175 Docs: 퀴즈 삭제 기능 설명 추가
+| * fc171e9 Feat: 퀴즈 삭제 메뉴 추가
+|/  
+*   87a74f6 Merge: 무작위 출제 기능
+|\  
+| * 73ba73f Docs: 무작위 출제 기능 설명 추가
+| * 828bcc5 Feat: 문제 순서 무작위 출제
+|/  
+* 56d6acd Feat: 파이썬 퀴즈 게임 기본 기능 구현
+
+## 2. 커밋 수
+전체: 17개 (병합 3개 포함)
+
+## 3. 브랜치 (git branch -a)
+  docs/project-overview
+  feat/delete-quiz
+  feat/random-quiz
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/docs/project-overview
+  remotes/origin/feat/delete-quiz
+  remotes/origin/feat/random-quiz
+  remotes/origin/main
+
+## 4. checkout, merge, pull 기록 (E1-2 폴더: git reflog)
+2d60773 HEAD@{1}: merge docs/project-overview: Merge made by the 'ort' strategy.
+8639878 HEAD@{2}: checkout: moving from docs/project-overview to main
+8639878 HEAD@{4}: checkout: moving from main to docs/project-overview
+b1b5023 HEAD@{6}: pull: Fast-forward
+
+## 5. clone 기록 (quiz-clone 폴더: git reflog)
+b1b5023 HEAD@{0}: commit: Docs: clone 환경에서 README에 개발 환경 추가
+b7d71c9 HEAD@{1}: clone: from https://github.com/lstldg77-gif/E1-2.git
