@@ -14,6 +14,9 @@ class QuizGameTests(unittest.TestCase):
         self.directory = tempfile.TemporaryDirectory()
         self.addCleanup(self.directory.cleanup)
         self.state_file = Path(self.directory.name) / "state.json"
+        shuffle_patch = patch("main.random.shuffle")
+        self.shuffle = shuffle_patch.start()
+        self.addCleanup(shuffle_patch.stop)
         with redirect_stdout(io.StringIO()):
             self.game = QuizGame(self.state_file)
 
@@ -43,6 +46,16 @@ class QuizGameTests(unittest.TestCase):
         with patch("builtins.input", side_effect=["1", "2", "1", "1", "1"]), redirect_stdout(io.StringIO()):
             self.game.play()
         self.assertEqual(self.game.best_score, {"correct": 4, "total": 5})
+
+    def test_play_shuffles_copy_of_quizzes(self):
+        original = list(self.game.quizzes)
+        self.shuffle.side_effect = lambda items: items.reverse()
+        answers = [str(quiz.answer) for quiz in reversed(original)]
+        with patch("builtins.input", side_effect=answers), redirect_stdout(io.StringIO()):
+            self.game.play()
+        self.shuffle.assert_called_once()
+        self.assertEqual(self.game.quizzes, original)
+        self.assertEqual(self.game.best_score, {"correct": 5, "total": 5})
 
     def test_corrupt_json_and_invalid_schema_use_defaults(self):
         for contents in ("{broken", json.dumps({"quizzes": [], "best_score": {"correct": 2, "total": 0}})):
