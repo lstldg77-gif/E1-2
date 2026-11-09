@@ -6,6 +6,7 @@ from contextlib import redirect_stdout
 from pathlib import Path
 from unittest.mock import patch
 
+from history import GameRecord
 from main import Quiz, QuizGame, read_number, read_text
 
 
@@ -103,8 +104,49 @@ class QuizGameTests(unittest.TestCase):
             self.game.play()
         self.assertNotIn("[오답 노트]", output.getvalue())
 
+    def test_every_game_is_recorded_in_history(self):
+        all_correct = ["5"] + [str(quiz.answer) for quiz in self.game.quizzes]
+        one_wrong = ["2", str(self.game.quizzes[0].answer), str(self.game.quizzes[1].answer % 4 + 1)]
+        with patch("builtins.input", side_effect=all_correct + one_wrong), redirect_stdout(io.StringIO()):
+            self.game.play()
+            self.game.play()
+            restarted = QuizGame(self.state_file)
+        records = [record.to_dict() for record in restarted.history]
+        self.assertEqual([(r["total"], r["correct"], r["score"]) for r in records],
+                         [(5, 5, 100.0), (2, 1, 50.0)])
+        for record in records:
+            self.assertRegex(record["played_at"], r"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$")
+        self.assertEqual(restarted.best_score, {"correct": 5, "total": 5})
+
+    def test_show_score_lists_history(self):
+        self.game.best_score = {"correct": 2, "total": 2}
+        self.game.history = [GameRecord("2026-11-09 10:00:00", 1, 2), GameRecord("2026-11-09 10:05:00", 2, 2)]
+        output = io.StringIO()
+        with redirect_stdout(output):
+            self.game.show_score()
+        self.assertIn("[게임 기록] (총 2회)", output.getvalue())
+        self.assertIn("1. 2026-11-09 10:00:00 | 2문제 중 1문제 정답 | 50.0점", output.getvalue())
+        self.assertIn("2. 2026-11-09 10:05:00 | 2문제 중 2문제 정답 | 100.0점", output.getvalue())
+
+    def test_file_without_history_still_loads(self):
+        old_state = {"quizzes": [Quiz("문제", ["a", "b", "c", "d"], 1).to_dict()],
+                     "best_score": {"correct": 1, "total": 1}}
+        self.state_file.write_text(json.dumps(old_state), encoding="utf-8")
+        with redirect_stdout(io.StringIO()):
+            game = QuizGame(self.state_file)
+        self.assertEqual(len(game.quizzes), 1)
+        self.assertEqual(game.history, [])
+
+    def test_game_record_rejects_invalid_data(self):
+        for played_at, correct, total in (("어제", 1, 2), ("2026-11-09 10:00:00", 3, 2),
+                                          ("2026-11-09 10:00:00", 1, 0), (None, 1, 2)):
+            with self.subTest(played_at=played_at, correct=correct, total=total):
+                with self.assertRaises(ValueError):
+                    GameRecord(played_at, correct, total)
+
     def test_corrupt_json_and_invalid_schema_use_defaults(self):
-        for contents in ("{broken", json.dumps({"quizzes": [], "best_score": {"correct": 2, "total": 0}})):
+        for contents in ("{broken", json.dumps({"quizzes": [], "best_score": {"correct": 2, "total": 0}}),
+                         json.dumps({"quizzes": [], "best_score": None, "history": [{"played_at": "x"}]})):
             self.state_file.write_text(contents, encoding="utf-8")
             with redirect_stdout(io.StringIO()):
                 game = QuizGame(self.state_file)
