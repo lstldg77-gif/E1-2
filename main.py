@@ -1,4 +1,5 @@
 import json
+import random
 from pathlib import Path
 
 
@@ -114,8 +115,10 @@ class QuizGame:
             print("등록된 퀴즈가 없습니다. 먼저 퀴즈를 추가하세요.")
             return
         correct = 0
-        print(f"\n퀴즈를 시작합니다. (총 {len(self.quizzes)}문제)")
-        for index, quiz in enumerate(self.quizzes, 1):
+        quizzes = list(self.quizzes)
+        random.shuffle(quizzes)
+        print(f"\n퀴즈를 시작합니다. (총 {len(quizzes)}문제, 무작위 순서)")
+        for index, quiz in enumerate(quizzes, 1):
             quiz.display(index)
             answer = read_number("정답 번호 (1-4): ", 1, 4)
             if quiz.is_correct(answer):
