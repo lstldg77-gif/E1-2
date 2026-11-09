@@ -35,7 +35,7 @@ python -m unittest -v
 - Ctrl+C 또는 입력 종료 시 안내 후 가능한 범위에서 저장합니다. 진행 중이던 문제 등록이나 미완료 게임은 기록하지 않습니다.
 - 데이터 파일이 없거나 손상되면 기본 문제를 사용합니다. 파일 읽기 오류 시 기존 데이터 보호를 위해 저장을 중지합니다.
 
-최고 점수는 정답률로 비교합니다. 퀴즈 수가 달라져도 점수를 공정하게 비교할 수 있으며, 같은 정답률이면 기존 기록을 유지합니다.
+최고 점수는 정답률로 비교합니다. 풀 문제 수나 저장된 퀴즈 수가 달라져도 점수를 공정하게 비교할 수 있으며, 같은 정답률이면 기존 기록을 유지합니다.
 
 ## 파일 구조
 
@@ -67,49 +67,46 @@ python -m unittest -v
 
 위 JSON은 구조 설명을 위한 예시입니다. 처음 실행하면 기본 문제 5개가 사용되고 종료하거나 변경 사항을 저장할 때 파일이 생성됩니다. 파일을 삭제하면 다음 실행에 기본 문제부터 다시 시작합니다. 개인 퀴즈와 점수는 `.gitignore`에 포함되어 GitHub에 업로드되지 않습니다.
 
-## Git과 GitHub 실습
+## Git과 GitHub
 
-Git을 설치하고 GitHub에 빈 공개 저장소를 만든 뒤, Git의 사용자 이름과 이메일을 설정하세요. 아래 주소는 실제 저장소 URL로 바꿉니다. 인증이 필요하면 GitHub의 공식 로그인 절차를 따르세요.
+저장소: https://github.com/lstldg77-gif/E1-2
 
-```powershell
-git --version
-git config --global user.name "GitHub 이름"
-git config --global user.email "GitHub 이메일"
-git init -b main
-git add .gitignore README.md main.py test_main.py
-git commit -m "Feat: 파이썬 퀴즈 게임 구현"
-git remote add origin https://github.com/사용자명/저장소명.git
-git push -u origin main
-```
+기능 단위로 커밋하고, 두 기능은 별도 브랜치에서 개발한 뒤 `main`에 `--no-ff`로 병합했습니다.
 
-이 명령은 완성된 현재 파일을 첫 커밋으로 올리는 예시이며, 이것만으로는 과제의 **의미 있는 커밋 10개와 브랜치 병합** 조건을 충족하지 않습니다. 이후 직접 기능을 개선하고 각 변경을 검증하면서 기능별로 커밋하세요. 예를 들어 무작위 출제 기능을 별도 브랜치에서 구현하고 병합할 수 있습니다.
+| 브랜치 | 작업 | 병합 커밋 |
+| --- | --- | --- |
+| `feat/random-quiz` | 문제 순서 무작위 출제, 문서 보완 | `Merge: 무작위 출제 기능` |
+| `feat/delete-quiz` | 퀴즈 삭제 메뉴, 문서 보완 | `Merge: 퀴즈 삭제 기능` |
+
+`main`에서는 풀 문제 수 선택, 오답 노트, 메뉴 리팩터링, 테스트 보강, 문서 정리를 각각 커밋했습니다. 전체 이력은 다음 명령으로 확인합니다.
 
 ```powershell
-git checkout -b feat/random-quiz
-# 기능 구현 및 테스트 후
-git add main.py test_main.py README.md
-git commit -m "Feat: 문제 순서 무작위 출제"
-git checkout main
-git merge --no-ff feat/random-quiz -m "Merge: 무작위 출제 기능"
-git push
 git log --oneline --graph --all
 ```
 
-총 10개 이상의 커밋은 실제 기능, 테스트, 문서 개선을 나눠 작성하고 `git log --oneline --graph --all`로 확인하세요. 커밋 수만 채우기 위한 내용 없는 커밋은 피합니다.
+### 원격 저장소에 올리기
 
-개발을 완료한 뒤 별도의 디렉터리에서 복제와 pull을 연습합니다. 아래 `<원본-프로젝트-경로>`는 이 프로젝트의 실제 경로로 바꾸세요.
+```powershell
+git remote add origin https://github.com/lstldg77-gif/E1-2.git
+git push -u origin main
+git push origin feat/random-quiz feat/delete-quiz
+```
+
+### clone과 pull 실습
+
+별도의 디렉터리에 저장소를 복제해 변경을 push하고, 원본 디렉터리에서 pull로 받아옵니다.
 
 ```powershell
 cd ..
-git clone https://github.com/사용자명/저장소명.git quiz-clone
+git clone https://github.com/lstldg77-gif/E1-2.git quiz-clone
 cd quiz-clone
 # README.md에 실제 변경을 추가한 다음
 git add README.md
-git commit -m "Docs: README 설명 보완"
+git commit -m "Docs: clone 환경에서 README 보완"
 git push
-cd <원본-프로젝트-경로>
+cd ..\E1-2
 git pull
 git log --oneline --graph --all
 ```
 
-GitHub 저장소 URL과 개발 환경, 메뉴/추가/목록/플레이/점수 화면, Git 로그 스크린샷은 직접 확인하고 제출하세요.
+제출할 때는 GitHub 저장소 URL과 개발 환경, 메뉴/추가/목록/삭제/플레이/점수 화면, Git 로그 스크린샷을 함께 냅니다.
