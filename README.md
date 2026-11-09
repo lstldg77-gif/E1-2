@@ -70,6 +70,8 @@ python main.py
 python -m unittest -v
 ```
 
+![개발 환경 확인과 테스트 17개 통과](results/screenshots/08_dev_env_and_tests.png)
+
 ## 4. 기능 목록
 
 | 메뉴 | 기능 |
@@ -96,22 +98,11 @@ python -m unittest -v
 
 > 최종 결과물 ①: 메뉴 선택에 따른 화면 출력, 풀기/추가/목록/점수 기능, 퀴즈 5개 이상, 재실행 후 데이터 유지
 
-실제로 `python main.py`를 실행한 기록입니다. 전체 화면은 [results/](results/) 폴더에 있습니다.
+실제로 `python main.py`를 실행한 기록입니다. 장면별 이미지는 [results/screenshots/](results/screenshots/), 전체 텍스트 기록은 [results/](results/) 폴더에 있습니다.
 
-### 5-1. 메뉴 화면
+### 5-1. 메뉴 화면과 퀴즈 목록
 
-```text
-저장된 데이터가 없어 기본 퀴즈를 사용합니다.
-
-========== 파이썬 입문 퀴즈 ==========
-1. 퀴즈 풀기
-2. 퀴즈 추가
-3. 퀴즈 목록
-4. 퀴즈 삭제
-5. 점수 확인
-6. 종료
-선택:
-```
+![메뉴와 퀴즈 목록](results/screenshots/01_menu_and_list.png)
 
 ### 5-2. 메뉴별 실행 결과 (첫 실행)
 
@@ -128,57 +119,33 @@ python -m unittest -v
 | 잘못된 입력 | `abc`, `9` | "1부터 6까지의 숫자를 입력하세요." 안내 후 재입력 |
 | 종료 | `6` | 데이터 저장 후 종료 |
 
-### 5-3. 퀴즈 풀기 화면 (일부)
+**퀴즈 추가** (추가 후 목록에 6번 문제가 생김)
 
-```text
-선택: 1
-풀 문제 수 (1-6): 6
+![퀴즈 추가](results/screenshots/02_add_quiz.png)
 
-퀴즈를 시작합니다. (총 6문제, 무작위 순서)
+**점수 확인**
 
-[문제 1] 함수를 정의할 때 사용하는 키워드는?
-1. class
-2. return
-3. while
-4. def
-정답 번호 (1-4): 4
-정답입니다!
+![점수 확인](results/screenshots/04_score.png)
 
-[문제 3] Python에서 화면에 값을 출력하는 함수는?
-1. print
-2. input
-3. open
-4. len
-정답 번호 (1-4): 2
-오답입니다. 정답: 1. print
+**퀴즈 삭제 (0 입력으로 취소)**
 
-결과: 6문제 중 5문제 정답 (83.3점)
+![퀴즈 삭제 취소](results/screenshots/05_delete_cancel.png)
 
-[오답 노트]
-- Python에서 화면에 값을 출력하는 함수는? → 정답: print
-새로운 최고 점수입니다!
-```
+**잘못된 입력 처리와 종료**
+
+![잘못된 입력과 종료](results/screenshots/06_invalid_input_and_exit.png)
+
+### 5-3. 퀴즈 풀기 화면
+
+풀 문제 수를 고르면 무작위 순서로 출제하고, 끝나면 점수와 오답 노트를 보여 줍니다.
+
+![퀴즈 풀기](results/screenshots/03_play_quiz.png)
 
 ### 5-4. 종료 후 다시 실행: 데이터 유지 확인
 
 프로그램을 종료한 뒤 다시 실행하자, 추가한 퀴즈와 최고 점수가 그대로 불러와졌습니다. 기록: [results/run_2_restart.txt](results/run_2_restart.txt)
 
-```text
-저장된 데이터를 불러왔습니다. (퀴즈 6개)
-...
-선택: 3
-
-등록된 퀴즈 목록 (총 6개)
-[1] Python에서 화면에 값을 출력하는 함수는?
-[2] 여러 값을 순서대로 저장하는 자료형은?
-[3] 조건에 따라 코드를 실행하는 키워드는?
-[4] 함수를 정의할 때 사용하는 키워드는?
-[5] JSON 파일을 처리할 때 사용하는 표준 모듈은?
-[6] 리스트의 길이를 구하는 함수는?
-...
-선택: 5
-최고 점수: 83.3점 (6문제 중 5문제 정답)
-```
+![재실행 후 데이터 유지](results/screenshots/07_restart_data_kept.png)
 
 ---
 
@@ -231,7 +198,8 @@ E1-2/
 │   ├── run_1_first.txt      # 첫 실행 전체 화면 기록
 │   ├── run_2_restart.txt    # 재실행 화면 기록 (데이터 유지 확인)
 │   ├── state_result.json    # 실행 후 저장된 데이터 사본
-│   └── git_history.txt      # Git 커밋·브랜치·clone·pull 기록
+│   ├── git_history.txt      # Git 커밋·브랜치·clone·pull 기록
+│   └── screenshots/         # 실행 장면 이미지 10장 (01~10)
 └── state.json           # 실행하면 생성되는 실제 데이터 파일 (GitHub 제외)
 ```
 
@@ -301,6 +269,8 @@ git log --oneline --graph --all   # 커밋과 브랜치 병합 그래프
 git reflog                        # checkout, merge, pull 기록
 ```
 
+![커밋 그래프와 브랜치](results/screenshots/09_git_log_graph.png)
+
 ### 9-1. 커밋 기록
 
 기능, 테스트, 문서를 나눠서 커밋했습니다. 커밋 메시지는 `종류: 내용` 형식입니다.
@@ -325,6 +295,7 @@ git reflog                        # checkout, merge, pull 기록
 | 16 | Merge: README 프로젝트 개요 | 병합 |
 | 17 | Docs: README를 과제 결과물 순서로 재구성하고 재실행 기록 추가 | 문서 |
 | 18 | Docs: Git 작업 기록 보관 | 문서 |
+| 19 | Docs: 실행 장면 이미지 저장 | 문서 |
 
 ### 9-2. 브랜치 생성과 병합
 
@@ -377,6 +348,8 @@ E1-2$ git reflog
 HEAD@{..}: pull: Fast-forward
 ```
 
+![checkout, merge, clone, pull 기록](results/screenshots/10_git_branch_clone_pull.png)
+
 ---
 
 ## 10. 요구사항 점검표
@@ -391,7 +364,7 @@ HEAD@{..}: pull: Fast-forward
 | 코드 구조 | 기능별 메서드 분리 (입력/진행/저장) | ✅ | [6-2](#6-2-기능별-메서드-분리) |
 | 코드 구조 | 프로젝트 루트 `state.json`에 UTF-8로 저장·불러오기 | ✅ | [6-3](#6-3-저장-위치), [8](#8-데이터-파일-설명-statejson) |
 | GitHub | 코드 업로드 | ✅ | https://github.com/lstldg77-gif/E1-2 |
-| GitHub | 의미 있는 커밋 10개 이상 | ✅ | [9-1](#9-1-커밋-기록) 18개 |
+| GitHub | 의미 있는 커밋 10개 이상 | ✅ | [9-1](#9-1-커밋-기록) 19개 |
 | GitHub | 브랜치 생성 및 병합 1회 이상 | ✅ | [9-2](#9-2-브랜치-생성과-병합) 3회 |
 | GitHub | clone, pull 각 1회 이상 | ✅ | [9-3](#9-3-clone과-pull) |
 | README | 개요, 주제 선정 이유, 실행 방법, 기능 목록, 파일 구조, 데이터 파일 | ✅ | [1](#1-프로젝트-개요), [2](#2-퀴즈-주제와-선정-이유), [3](#3-실행-방법), [4](#4-기능-목록), [7](#7-파일-구조), [8](#8-데이터-파일-설명-statejson) |

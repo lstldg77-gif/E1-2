@@ -8,6 +8,24 @@
 | [run_2_restart.txt](run_2_restart.txt) | 종료 후 다시 실행한 화면 기록 | 추가한 퀴즈와 최고 점수 유지 |
 | [state_result.json](state_result.json) | 실행 후 저장된 데이터 사본 | `state.json` 저장 형식 (UTF-8) |
 | [git_history.txt](git_history.txt) | 커밋 그래프, 브랜치, checkout/merge/clone/pull 기록 | GitHub 커밋·브랜치·clone·pull |
+| [screenshots/](screenshots/) | 실행 장면 이미지 10장 | 아래 표 참고 |
+
+## 실행 장면 이미지 (screenshots/)
+
+| 파일 | 장면 |
+| --- | --- |
+| [01_menu_and_list.png](screenshots/01_menu_and_list.png) | 프로그램 시작, 메뉴, 퀴즈 목록 (기본 5개) |
+| [02_add_quiz.png](screenshots/02_add_quiz.png) | 퀴즈 추가 후 목록에서 6개 확인 |
+| [03_play_quiz.png](screenshots/03_play_quiz.png) | 퀴즈 풀기 6문제, 점수, 오답 노트 |
+| [04_score.png](screenshots/04_score.png) | 최고 점수 확인 |
+| [05_delete_cancel.png](screenshots/05_delete_cancel.png) | 퀴즈 삭제 메뉴 (취소) |
+| [06_invalid_input_and_exit.png](screenshots/06_invalid_input_and_exit.png) | 잘못된 입력 안내와 종료 |
+| [07_restart_data_kept.png](screenshots/07_restart_data_kept.png) | 다시 실행했을 때 퀴즈 6개와 최고 점수 유지 |
+| [08_dev_env_and_tests.png](screenshots/08_dev_env_and_tests.png) | Python·Git 버전, 테스트 17개 통과 |
+| [09_git_log_graph.png](screenshots/09_git_log_graph.png) | 커밋 그래프와 브랜치 목록 |
+| [10_git_branch_clone_pull.png](screenshots/10_git_branch_clone_pull.png) | checkout, merge, clone, pull 기록과 원격 저장소 |
+
+게임 장면(01~07)은 실행 기록 `run_1_first.txt`, `run_2_restart.txt`의 출력을 터미널 화면 모양으로 그린 것입니다. 08~10은 이미지를 만들 때 해당 명령을 실제로 실행한 출력입니다. 입력값은 노란색, 정답은 초록색, 오답과 오류 안내는 빨간색으로 표시했습니다.
 
 ## 1. 첫 실행 (run_1_first.txt)
 
