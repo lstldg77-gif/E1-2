@@ -1,0 +1,68 @@
+{
+  "quizzes": [
+    {
+      "question": "Python에서 화면에 값을 출력하는 함수는?",
+      "choices": [
+        "print",
+        "input",
+        "open",
+        "len"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "여러 값을 순서대로 저장하는 자료형은?",
+      "choices": [
+        "int",
+        "bool",
+        "list",
+        "float"
+      ],
+      "answer": 3
+    },
+    {
+      "question": "조건에 따라 코드를 실행하는 키워드는?",
+      "choices": [
+        "for",
+        "if",
+        "def",
+        "import"
+      ],
+      "answer": 2
+    },
+    {
+      "question": "함수를 정의할 때 사용하는 키워드는?",
+      "choices": [
+        "class",
+        "return",
+        "while",
+        "def"
+      ],
+      "answer": 4
+    },
+    {
+      "question": "JSON 파일을 처리할 때 사용하는 표준 모듈은?",
+      "choices": [
+        "random",
+        "json",
+        "math",
+        "time"
+      ],
+      "answer": 2
+    },
+    {
+      "question": "리스트의 길이를 구하는 함수는?",
+      "choices": [
+        "len",
+        "size",
+        "count",
+        "length"
+      ],
+      "answer": 1
+    }
+  ],
+  "best_score": {
+    "correct": 5,
+    "total": 6
+  }
+}
