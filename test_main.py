@@ -34,7 +34,7 @@ class QuizGameTests(unittest.TestCase):
         answers = ["새 문제", "하나", "둘", "셋", "넷", "2"]
         with patch("builtins.input", side_effect=answers), redirect_stdout(io.StringIO()):
             self.game.add_quiz()
-            with patch("builtins.input", side_effect=[str(quiz.answer) for quiz in self.game.quizzes]):
+            with patch("builtins.input", side_effect=["6"] + [str(quiz.answer) for quiz in self.game.quizzes]):
                 self.game.play()
             restarted = QuizGame(self.state_file)
         self.assertEqual(len(restarted.quizzes), 6)
@@ -43,19 +43,26 @@ class QuizGameTests(unittest.TestCase):
 
     def test_best_score_compares_percentages(self):
         self.game.best_score = {"correct": 4, "total": 5}
-        with patch("builtins.input", side_effect=["1", "2", "1", "1", "1"]), redirect_stdout(io.StringIO()):
+        with patch("builtins.input", side_effect=["5", "1", "2", "1", "1", "1"]), redirect_stdout(io.StringIO()):
             self.game.play()
         self.assertEqual(self.game.best_score, {"correct": 4, "total": 5})
 
     def test_play_shuffles_copy_of_quizzes(self):
         original = list(self.game.quizzes)
         self.shuffle.side_effect = lambda items: items.reverse()
-        answers = [str(quiz.answer) for quiz in reversed(original)]
+        answers = ["5"] + [str(quiz.answer) for quiz in reversed(original)]
         with patch("builtins.input", side_effect=answers), redirect_stdout(io.StringIO()):
             self.game.play()
         self.shuffle.assert_called_once()
         self.assertEqual(self.game.quizzes, original)
         self.assertEqual(self.game.best_score, {"correct": 5, "total": 5})
+
+    def test_play_selected_number_of_quizzes(self):
+        first, second = self.game.quizzes[:2]
+        answers = ["0", "6", "2", str(first.answer), str(second.answer % 4 + 1)]
+        with patch("builtins.input", side_effect=answers), redirect_stdout(io.StringIO()):
+            self.game.play()
+        self.assertEqual(self.game.best_score, {"correct": 1, "total": 2})
 
     def test_corrupt_json_and_invalid_schema_use_defaults(self):
         for contents in ("{broken", json.dumps({"quizzes": [], "best_score": {"correct": 2, "total": 0}})):

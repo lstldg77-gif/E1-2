@@ -115,8 +115,10 @@ class QuizGame:
             print("등록된 퀴즈가 없습니다. 먼저 퀴즈를 추가하세요.")
             return
         correct = 0
+        count = read_number(f"풀 문제 수 (1-{len(self.quizzes)}): ", 1, len(self.quizzes))
         quizzes = list(self.quizzes)
         random.shuffle(quizzes)
+        quizzes = quizzes[:count]
         print(f"\n퀴즈를 시작합니다. (총 {len(quizzes)}문제, 무작위 순서)")
         for index, quiz in enumerate(quizzes, 1):
             quiz.display(index)
@@ -126,7 +128,7 @@ class QuizGame:
                 print("정답입니다!")
             else:
                 print(f"오답입니다. 정답: {quiz.answer}. {quiz.choices[quiz.answer - 1]}")
-        total = len(self.quizzes)
+        total = len(quizzes)
         print(f"\n결과: {total}문제 중 {correct}문제 정답 ({correct / total * 100:.1f}점)")
         if (self.best_score is None
                 or correct * self.best_score["total"] > self.best_score["correct"] * total):
