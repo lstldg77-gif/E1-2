@@ -24,6 +24,34 @@ class QuizGameTests(unittest.TestCase):
         self.assertGreaterEqual(len(self.game.quizzes), 5)
         self.assertTrue(all(isinstance(quiz, Quiz) for quiz in self.game.quizzes))
 
+    def test_quiz_rejects_invalid_data(self):
+        invalid_cases = [
+            ("", ["a", "b", "c", "d"], 1),
+            ("문제", ["a", "b", "c"], 1),
+            ("문제", ["a", "b", " ", "d"], 1),
+            ("문제", ["a", "b", "c", "d"], 5),
+            ("문제", ["a", "b", "c", "d"], True),
+            ("문제", ["a", "b", "c", "d"], "1"),
+        ]
+        for question, choices, answer in invalid_cases:
+            with self.subTest(question=question, choices=choices, answer=answer):
+                with self.assertRaises(ValueError):
+                    Quiz(question, choices, answer)
+
+    def test_quiz_round_trip_and_answer_check(self):
+        quiz = Quiz("문제", ["a", "b", "c", "d"], 3)
+        restored = Quiz(**quiz.to_dict())
+        self.assertEqual(restored.to_dict(), quiz.to_dict())
+        self.assertTrue(restored.is_correct(3))
+        self.assertFalse(restored.is_correct(1))
+
+    def test_menu_exit_saves_state(self):
+        output = io.StringIO()
+        with patch("builtins.input", side_effect=["7", "6"]), redirect_stdout(output):
+            self.game.run()
+        self.assertIn("게임을 종료합니다", output.getvalue())
+        self.assertTrue(self.state_file.exists())
+
     def test_input_retries_invalid_values(self):
         with patch("builtins.input", side_effect=["", "abc", "0", "9", " 2 "]), redirect_stdout(io.StringIO()):
             self.assertEqual(read_number("선택: ", 1, 5), 2)
