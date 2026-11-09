@@ -185,24 +185,24 @@ class QuizGame:
         print(f"최고 점수: {correct / total * 100:.1f}점 ({total}문제 중 {correct}문제 정답)")
 
     def run(self):
+        menu = [
+            ("퀴즈 풀기", self.play),
+            ("퀴즈 추가", self.add_quiz),
+            ("퀴즈 목록", self.list_quizzes),
+            ("퀴즈 삭제", self.delete_quiz),
+            ("점수 확인", self.show_score),
+            ("종료", None),
+        ]
         try:
             while True:
                 print("\n========== 파이썬 입문 퀴즈 ==========")
-                print("1. 퀴즈 풀기\n2. 퀴즈 추가\n3. 퀴즈 목록\n4. 퀴즈 삭제\n5. 점수 확인\n6. 종료")
-                choice = read_number("선택: ", 1, 6)
-                if choice == 1:
-                    self.play()
-                elif choice == 2:
-                    self.add_quiz()
-                elif choice == 3:
-                    self.list_quizzes()
-                elif choice == 4:
-                    self.delete_quiz()
-                elif choice == 5:
-                    self.show_score()
-                else:
+                for number, (title, _) in enumerate(menu, 1):
+                    print(f"{number}. {title}")
+                _, action = menu[read_number("선택: ", 1, len(menu)) - 1]
+                if action is None:
                     print("게임을 종료합니다.")
                     break
+                action()
         except (KeyboardInterrupt, EOFError):
             print("\n입력이 종료되어 게임을 안전하게 종료합니다.")
         finally:
