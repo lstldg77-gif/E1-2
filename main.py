@@ -2,6 +2,8 @@ import json
 import random
 from pathlib import Path
 
+from history import GameRecord
+
 
 STATE_FILE = Path(__file__).resolve().parent / "state.json"
 
@@ -66,6 +68,7 @@ class QuizGame:
         self.state_file = Path(state_file)
         self.quizzes = default_quizzes()
         self.best_score = None
+        self.history = []
         self.save_allowed = True
         self.load_state()
 
@@ -83,8 +86,13 @@ class QuizGame:
                         or type(score.get("total")) is not int
                         or score["total"] <= 0 or not 0 <= score["correct"] <= score["total"]):
                     raise ValueError("최고 점수의 형식이 올바르지 않습니다.")
+            records = state.get("history", [])
+            if not isinstance(records, list):
+                raise ValueError("게임 기록의 형식이 올바르지 않습니다.")
+            history = [GameRecord.from_dict(item) for item in records]
             self.quizzes = quizzes
             self.best_score = score
+            self.history = history
             print(f"저장된 데이터를 불러왔습니다. (퀴즈 {len(self.quizzes)}개)")
         except FileNotFoundError:
             print("저장된 데이터가 없어 기본 퀴즈를 사용합니다.")
@@ -99,7 +107,8 @@ class QuizGame:
             print("기존 데이터를 보호하기 위해 저장하지 않았습니다.")
             return False
         state = {"quizzes": [quiz.to_dict() for quiz in self.quizzes],
-                 "best_score": self.best_score}
+                 "best_score": self.best_score,
+                 "history": [record.to_dict() for record in self.history]}
         try:
             temporary_file = self.state_file.with_name(self.state_file.name + ".tmp")
             with temporary_file.open("w", encoding="utf-8") as file:
@@ -140,7 +149,8 @@ class QuizGame:
                 or correct * self.best_score["total"] > self.best_score["correct"] * total):
             self.best_score = {"correct": correct, "total": total}
             print("새로운 최고 점수입니다!")
-            self.save_state()
+        self.history.append(GameRecord.create(correct, total))
+        self.save_state()
 
     def add_quiz(self):
         print("\n새로운 퀴즈를 추가합니다.")
@@ -183,6 +193,14 @@ class QuizGame:
         correct = self.best_score["correct"]
         total = self.best_score["total"]
         print(f"최고 점수: {correct / total * 100:.1f}점 ({total}문제 중 {correct}문제 정답)")
+        self.show_history()
+
+    def show_history(self):
+        if not self.history:
+            return
+        print(f"\n[게임 기록] (총 {len(self.history)}회)")
+        for index, record in enumerate(self.history, 1):
+            print(f"{index}. {record.summary()}")
 
     def run(self):
         menu = [

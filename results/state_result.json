@@ -62,7 +62,21 @@
     }
   ],
   "best_score": {
-    "correct": 5,
-    "total": 6
-  }
+    "correct": 3,
+    "total": 3
+  },
+  "history": [
+    {
+      "played_at": "2026-11-09 18:26:37",
+      "total": 6,
+      "correct": 5,
+      "score": 83.3
+    },
+    {
+      "played_at": "2026-11-09 18:26:38",
+      "total": 3,
+      "correct": 3,
+      "score": 100.0
+    }
+  ]
 }
